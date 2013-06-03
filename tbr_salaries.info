@@ -1,0 +1,10 @@
+name = "TBR Salaries Views"
+description = "Exposes Salary Database to Views"
+dependencies[] = views
+package = "TBR Salaries Views"
+core = 7.x
+version = "7.x-1.0"
+project = "tbr_salaries"
+
+files[] = tbr_salaries.module
+files[] = tbr_tbrsalaries.views.inc
