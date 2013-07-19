@@ -1,7 +1,7 @@
 name = "TBR Salaries Views"
 description = "Exposes Salary Database to Views"
 dependencies[] = views
-package = "TBR Salaries Views"
+package = "TBR"
 core = 7.x
 version = "7.x-1.0"
 project = "tbr_salaries"
