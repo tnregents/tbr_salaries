@@ -20,7 +20,7 @@ function  tbr_salaries_views_data() {
       'help' => t('Salary Employee Institution'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
@@ -38,7 +38,7 @@ function  tbr_salaries_views_data() {
       'help' => t('Salary Employee Last Name'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
@@ -56,7 +56,7 @@ function  tbr_salaries_views_data() {
       'help' => t('Salary Employee First Name'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
@@ -73,7 +73,7 @@ function  tbr_salaries_views_data() {
       'help' => t('Salary Employee Job Title'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
@@ -90,7 +90,7 @@ function  tbr_salaries_views_data() {
       'help' => t('Department'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
@@ -107,7 +107,7 @@ function  tbr_salaries_views_data() {
       'help' => t('Salary Employee FTE'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
@@ -125,7 +125,25 @@ function  tbr_salaries_views_data() {
       'help' => t('Salary Employee Salary'),
       'field' => array(
          'handler' => 'views_handler_field',
-         ' click sortable' => TRUE,
+         'click sortable' => TRUE,
+      ),
+      'sort' => array(
+         'handler' => 'views_handler_sort',
+      ),
+      'filter' => array(
+         'handler' => 'views_handler_filter_string',
+      ),
+      'argument' => array(
+         'handler' => 'views_handler_argument_string',
+      ),
+    );
+
+    $data['salaries']['year'] = array(
+      'title' => t('Salary Year'),
+      'help' => t('Salary Year'),
+      'field' => array(
+         'handler' => 'views_handler_field',
+         'click sortable' => TRUE,
       ),
       'sort' => array(
          'handler' => 'views_handler_sort',
