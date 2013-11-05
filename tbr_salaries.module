@@ -7,63 +7,78 @@ function tbr_salaries_views_api() {
 }
 
 function tbr_salaries_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == "views_exposed_form" && $form['#id'] == "views-exposed-form-tbr-salary-data-page") {
+  if ($form_id == "views_exposed_form" && $form['#id'] == "views-exposed-form-tbr-salary-data-page" or $form['#id'] == "views-exposed-form-tbr-salary-data-history-page") {
     
     $form['institution']['#type'] = "select";
     $form['institution']['#size'] = null;
-    $form['institution']['#options'] = array(			
-		'' => t(''),
-		'Austin Peay State University' => t('Austin Peay State University'),
-		'East Tennessee State Univ' => t('East Tennessee State University'),
-		'Middle TN State University' => t('Middle TN State University'),
-		'Tennessee State University' => t('Tennessee State University'),
-		'TN Technological Univ' => t('Tennessee Tech University'),
-		'University of Memphis' => t('University of Memphis'),
-		'Chattanooga State Comm. Coll.' => t('Chattanooga State Comm College'),
-		'Cleveland State Comm College' => t('Cleveland State Comm College'),
-		'Columbia State Comm College' => t('Columbia State Comm College'),
-		'Dyersburg State Comm College' => t('Dyersburg State Comm College'),
-		'Jackson State Comm College' => t('Jackson State Comm College'),
-		'Motlow State Comm College' => t('Motlow State Comm College'),
-		'Nashville State Comm Coll' => t('Nashville State Comm College'),
-		'NE State Tech Comm College' => t('Northeast State Comm College'),
-		'Pellissippi State Comm Coll' => t('Pellissippi State Comm College'),
-		'Roane State Comm College' => t('Roane State Community College'),
-		'Southwest Tenn Comm Coll' => t('Southwest Tenn Comm Coll'),
-		'Volunteer State Comm College' => t('Volunteer State Comm College'),
-		'Walters State Comm College' => t('Walters State Comm College'),
-		'TN Tech Center Athens' => t('TTC Athens'),
-		'TN Tech Center Chattanooga' => t('TTC Chattanooga'),
-		'TN Tech Center Covington' => t('TTC Covington'),
-		'TN Technology Ctr Crossville' => t('TTC Crossville'),
-		'TN Tech Center Crump' => t('TTC Crump'),
-		'TN Tech Center Dickson' => t('TTC Dickson'),
-		'TN Tech Center Elizabethton' => t('TTC Elizabethton'),
-		'TN Technology Ctr Harriman' => t('TTC Harriman'),
-		'TN Tech Center Hartsville' => t('TTC Hartsville'),
-		'TN Tech Center Hohenwald' => t('TTC Hohenwald'),
-		'TN Technology Ctr Jacksboro' => t('TTC Jacksboro'),
-		'TN Tech Center Jackson' => t('TTC Jackson'),
-		'TN Tech Center Knoxville' => t('TTC Knoxville'),
-		'TN Tech Center Livingston' => t('TTC Livingston'),
-		'TN Tech Center McKenzie' => t('TTC McKenzie'),
-		'TN Tech Center McMinnville' => t('TTC McMinnville'),
-		'TN Tech Center Memphis' => t('TTC Memphis'),
-		'TN Tech Center Morristown' => t('TTC Morristown'),
-		'TN Tech Center Murfreesboro' => t('TTC Murfreesboro'),
-		'TN Tech Center Nashville' => t('TTC Nashville'),
-		'TN Tech Center Newbern' => t('TTC Newbern'),
-		'TN Technology Ctr Oneida' => t('TTC Oneida'),
-		'TN Tech Center Paris' => t('TTC Paris'),
-		'TN Tech Center Pulaski' => t('TTC Pulaski'),
-		'TN Tech Center Ripley' => t('TTC Ripley'),
-		'TN Tech Center Shelbyville' => t('TTC Shelbyville'),
-		'TN Tech Center Whiteville' => t('TTC Whiteville'),
-		'Tennessee Board of Regents' => t('Tennessee Board of Regents')
-    );
-	//$form['institution']['#default_value'] = $form['edit-institution']['#options']['All'];
+    $form['institution']['#options'] = array();
+	$form['institution']['#options'][''] = '';
+	
+	$results = null;
+	$cache_key = "salaries_institutions";
+	$cache = cache_get($cache_key);
+	
+	if ($cache) {
+		//drupal_set_message("Content Type List Loaded from Cache: " . date("Y-m-d H:i:s", $cache->created));
+		$results = $cache->data;
+	}
+	else {
+	   //Set the database to the salaries database
+	   db_set_active('tbr_data_salaries');
+	   
+	   //Get distinct years
+	   $result = db_query('SELECT DISTINCT(institution) FROM salaries ORDER BY institution ASC');
+       $results = $result->fetchAll(); 
+	   cache_set($cache_key, $results, 'cache', CACHE_TEMPORARY);
+	   //drupal_set_message("Content Type List Saved to Cache");
 
+	   //Set the database back to the default drupal database
+	   db_set_active();
+   }
+   
+   foreach ($results as $record) {
+	   //Add the years to the select list array
+	   $form['institution']['#options'][$record->institution] = $record->institution;
+   }
   }
+  
+  
+  if ($form_id == "views_exposed_form" && $form['#id'] == "views-exposed-form-tbr-salary-data-history-page") {
+
+	$form['year']['#type'] = "select";
+	$form['year']['#size'] = null;
+	$form['year']['#options'] = array();
+	$form['year']['#options'][""] = ""; 
+	
+	$results = null;
+	$cache_key = "salaries_years";
+	$cache = cache_get($cache_key);
+	if ($cache) {
+		drupal_set_message("Content Type List Loaded from Cache: " . date("Y-m-d H:i:s", $cache->created));
+		$results = $cache->data;
+	}
+	else {
+	   //Set the database to the salaries database
+	   db_set_active('tbr_data_salaries');
+	   
+	   //Get distinct years
+	   $result = db_query('SELECT DISTINCT(year) FROM salaries ORDER BY year DESC');
+       $results = $result->fetchAll(); 
+	   cache_set($cache_key, $results, 'cache', CACHE_TEMPORARY);
+	   //drupal_set_message("Content Type List Saved to Cache");
+
+	   //Set the database back to the default drupal database
+	   db_set_active();
+   }
+   
+   foreach ($results as $record) {
+	   //Add the years to the select list array
+	   $form['year']['#options'][$record->year] = $record->year;
+   }
+ 
+  }
+  
+
 }
 
 
